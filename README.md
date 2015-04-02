@@ -3,18 +3,65 @@ E5R.SimpleAutoDeployer
 
 Simple Automatic Deployer
 
-Sistema simples e autom·tico para implementaÁ„o de softwares.
+Sistema simples e autom√°tico para implementa√ß√£o de softwares.
 
 ## Ideia basica
 
-* e5rsad.exe escutando as mudanÁas nos diretÛrios:
-    * __/wainting__: Tarefas em espera [[provavelmente sÛ esta È suficiente]]
+* e5rsad.exe escutando as mudan√ßas nos diret√≥rios:
+    * __/wainting__: Tarefas em espera [[provavelmente s√≥ esta √© suficiente]]
     * __/initiated__: Tarefas iniciadas
     * __/completed__: Tarefas completadas
-* As tarefas s„o descritas em arquivos _JSON_;
+* As tarefas s√£o descritas em arquivos _JSON_;
 * e5rsad.exe mantem uma fila das tarefas
-* Quando um arquivo novo È detectado um objeto __TaskBase__ È criado e incluÌdo na fila`__waiting__;
-* ApÛs a conclus„o de uma tarefa, e/ou de tempos em tempos a prÛxima tarefa È iniciada:
-    * AÌ a mesma È removida do diretÛrio (e da fila) __waiting__ e movida para __initiated__;
-* Quando uma tarefa È finalizada (com sucesso ou erro) a mesma È movida da fila (e do diretÛrio) __initiated__ para __completed__;
-    * E a prÛxima tarefa (se ouver È iniciada)
+* Quando um arquivo novo √© detectado um objeto __TaskBase__ √© criado e inclu√≠do na fila`__waiting__;
+* Ap√≥s a conclus√£o de uma tarefa, e/ou de tempos em tempos a pr√≥xima tarefa √© iniciada:
+    * A√≠ a mesma √© removida do diret√≥rio (e da fila) __waiting__ e movida para __initiated__;
+* Quando uma tarefa √© finalizada (com sucesso ou erro) a mesma √© movida da fila (e do diret√≥rio) __initiated__ para __completed__;
+    * E a pr√≥xima tarefa (se ouver √© iniciada)
+
+### Arquivo de tarefas
+
+Dentro de cada diret√≥rio, uma tarefa (mudar para "um arquivo de deploy") √© descrita por um arquivo __JSON__.
+
+```json
+{
+   "deploy_id": "000001",
+   "steps": [
+      {
+         "task": "CheckoutSVN",
+         "params": {
+            "repository": "http://svn.company.com",
+            "user": "UserName",
+            "password": "Password",
+            "path": "tags/v1.0.1",
+            "revision": "767687678"
+         }
+      },
+      {
+         "task": "MSBuild",
+         "params": {
+            "target": "Main.sln",
+            "extra_params": "/NoLogo /NoConsoleLogger"
+         }
+      },
+      {
+         "task": "script_powershell",
+         "params": {
+            "script": "build/custom.ps1"
+         }
+      }
+   ],
+   "output": {
+      /* The output information of execution */
+   }
+}
+```
+
+Por seguran√ßa, √© necess√°rio haver um arquivo de deploy's permitidos.
+
+```json
+[
+   { "id": "APP_001", "name": "Application One" },
+   { "id": "APP_002", "name": "Application Two" }
+]
+```
